@@ -1,0 +1,63 @@
+.patients-container {
+    display: flex;
+    font-family: Arial, sans-serif;
+  }
+  
+  .patient-list {
+    padding: 20px;
+    overflow-y: auto;
+    list-style:none;
+    flex: 1;
+    max-height: 100vh;
+  }
+
+  .patient-list::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  .patient-list::-webkit-scrollbar-thumb {
+    background-color: #fff; 
+    border-radius: 6px;
+  }
+  
+  .patient-item {
+    cursor: pointer;
+    padding: 8px;
+    transition: background-color 0.3s;
+    color: #888;
+  }
+
+  .patient-details {
+    flex: 2;
+  }
+  
+  .patient-item:hover {
+    background-color: #e8e8e8;
+    color: #333;
+  }
+
+  .empty {
+    text-align: center;
+    color: #888;
+    padding: 20px;
+  }
+
+  .search-bar {
+    margin-left: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    width: 87.5%;
+  }
+  
+  h2 {
+    font-weight: 400;
+    padding-left: 25px;
+  }
+
+  p {
+    font-weight: 400;
+    color: #888;
+    padding-left: 25px;
+  }
