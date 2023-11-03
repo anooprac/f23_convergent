@@ -24,8 +24,8 @@ const Navbar = () => {
           </Link>
         </li>
         <li className="nav-item">
-          <Link to="/schedule" className={`nav-link ${isCurrentPage('/schedule') ? 'active' : ''}`}>
-            SCHEDULE
+          <Link to="/patient_form" className={`nav-link ${isCurrentPage('/patient_form') ? 'active' : ''}`}>
+            NEW PATIENT
           </Link>
         </li>
       </ul>

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Patients from './pages/Patients';
-import Schedule from './pages/Schedule';
+import PatientForm from './pages/PatientForm';
 
 function App() {
   const [data, setData] = React.useState(null);
@@ -20,8 +20,8 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" exact element={<Home />}/>
-          <Route path="/patients/*" element={<Patients />} />
-          <Route path="/schedule"  element={<Schedule />}/>
+          <Route path="/patients" element={<Patients />} />
+          <Route path="/patient_form"  element={<PatientForm />}/>
         </Routes>
       </div>
     </Router>

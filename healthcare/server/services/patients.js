@@ -1,9 +1,9 @@
 const db = require('../services/db');
 const config = require('../config');
 
-function getMultiple(page = 1) {
+async function getMultiple(page = 1) {
   const offset = (page - 1) * config.listPerPage;
-  const data = db.query(`SELECT * FROM patients LIMIT ?,?`, [offset, config.listPerPage]);
+  const data = await db.query(`SELECT * FROM patients LIMIT ?,?`, [offset, config.listPerPage]);
   const meta = {page};
 
   return {
@@ -46,6 +46,17 @@ function create(patientObj) {
     return {message};
   }
 
+  function deleteById(id) {
+    const result = db.run('DELETE FROM patients WHERE id = ?', id);
+  
+    let message = 'Error in deleting patient';
+    if (result.changes) {
+      message = 'Patient deleted successfully';
+    }
+  
+    return { message };
+  }
+
 module.exports = {
-  getMultiple, create
+  getMultiple, create, deleteById
 }

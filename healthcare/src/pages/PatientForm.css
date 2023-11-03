@@ -1,0 +1,48 @@
+.patient-form {
+    background: #f5f5f5;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    margin: 0 auto;
+  }
+  
+  .patient-form h1 {
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .patient-form form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .patient-form label {
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: #666;
+  }
+  
+  .patient-form input {
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .patient-form button {
+    padding: 10px;
+    background: #c7c7c7;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .patient-form button:hover {
+    background: #bfbfbf;
+  }
+  
