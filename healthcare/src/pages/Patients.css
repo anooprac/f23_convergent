@@ -36,6 +36,46 @@
     color: #333;
   }
 
+  .patient-box {
+    width: 80%;
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f2f2f2;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.patient-box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.patient-risk-status{
+  padding: 5px 15px;
+  border: 1px solid black;
+  border-radius: 20px;
+}
+
+.patient-details {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.patient-contact {
+  width: 40%;
+}
+
+  .risk-status{
+    justify-content: space-between;
+    border: .5px solid black;
+    border-radius: 20px;
+    width: 12.5%;
+    background-color: #ccc;
+  }
+
   .empty {
     text-align: center;
     color: #888;
@@ -45,7 +85,7 @@
   .search-bar {
     margin-left: 20px;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #ACD2C4;
     border-radius: 5px;
     font-family: Arial, sans-serif;
     width: 87.5%;

@@ -63,14 +63,22 @@ const Patients = ({ patients }) => {
                 ))}
                 </ul>
         </div>
-        <div>
+        <div class = "patient-box">
             {selectedPatient && (
-            <div> 
-            <h2>Details</h2>
+            <div>
+            <div class = "patient-box-header"> 
+              <p>Patient Name : John Doe</p>
+              <div class = "patient-risk-status"> High Risk </div>
+            </div>
             <div className='patient-details'>
             <p>Name: {selectedPatient.name}</p>
             <p>Age: {selectedPatient.age}</p>
-            <p>Info: {selectedPatient.info}</p>
+            <div className='patient-contact'>
+              <p>Contact</p>
+              <p>Phone Number (Home):</p>
+              <p>Phone Number (Mobile):</p>
+              <p>Email:</p>
+            </div>
             </div>
             </div>
             )}
