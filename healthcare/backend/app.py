@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
 import numpy as np
 import torch
 from torch import nn
 import sqlite3
 
 app = Flask(__name__)
+CORS(app)
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
@@ -36,11 +38,20 @@ def index():
             'admission_source': patient['admission_source'],
             'metformin': patient['metformin'],
             'insulin': patient['insulin'],
-            'diagnosis': patient['diagnosis']
+            'diagnosis': patient['diagnosis'],
+            'race': patient['race'],
+            'gender': patient['gender'],
+            'A1Cresult': patient['A1Cresult'],
+            'max_glu_serum': patient['max_glu_serum'],
+            'contact': {
+                'home': patient['home'],
+                'mobile': patient['mobile'],
+                'email': patient['email']
+            }
         }
         patient_list.append(formatted_patient)
 
-    return jsonify({'patients': patient_list})
+    return ({'patients': patient_list})
 
 class SimpleNet(nn.Module):
     def __init__(self):
@@ -139,37 +150,50 @@ max_glu_serum_mapping = {
 def predict():
     data = request.json
 
-    patient_name = data['name']
+    name = data['name']
+    email = data['email']
+    mobile = data['mobile']
+    home = data['home']
 
-    admissions = data.get('Admission', []) 
-    admission_features = [1 if admission in admissions else 0 for admission in admission_type]
+    admissions = data.get('Admission', [])
+    admission_string = ''.join(admissions)
+    admission_features = [1 if admission_string == admission_stringy else 0 for admission_stringy in admission_type]
 
     discharges = data.get('Discharge', [])
-    discharge_features = [1 if discharge in discharges else 0 for discharge in discharge_type]
+    discharge_string = ''.join(discharges)
+    discharge_features = [1 if discharge_string == discharge else 0 for discharge in discharge_type]
 
     admission_sources = data.get('Admission source', [])
-    admission_source_features = [1 if admission_source in admission_sources else 0 for admission_source in admission_source_type]
+    admission_source_string = ''.join(admission_sources)
+    admission_source_features = [1 if admission_source_string == admission_source else 0 for admission_source in admission_source_type]
 
     metformins = data.get('Metformin', [])
-    metformin_features = [1 if metformin in metformins else 0 for metformin in metformin_type]
+    metformin_string = ''.join(metformins)
+    metformin_features = [1 if metformin_string == metformin else 0 for metformin in metformin_type]
 
     insulins = data.get('Insulin', [])
-    insulin_features = [1 if insulin in insulins else 0 for insulin in insulin_type]
+    insulin_string = ''.join(insulins)
+    insulin_features = [1 if insulin_string == insulin else 0 for insulin in insulin_type]
 
     diagnosiss = data.get('Diagnosis', [])
-    diagnosis_features = [1 if diagnosis in diagnosiss else 0 for diagnosis in diagnosis_type]
+    diagnosis_string = ''.join(diagnosiss)
+    diagnosis_features = [1 if diagnosis_string == diagnosis else 0 for diagnosis in diagnosis_type]
 
     genders = data.get('Gender', [])
-    gender_features = [1 if gender in genders else 0 for gender in all_genders]
+    gender_string = ''.join(genders)
+    gender_features = [1 if gender_string == gender else 0 for gender in all_genders]
 
     races = data.get('Race', [])
-    race_features = [1 if race in races else 0 for race in all_races]
+    race_string = ''.join(races)
+    race_features = [1 if race_string == race else 0 for race in all_races]
 
     A1Cresults = data.get('A1Cresult', [])
-    A1Cresult_features = [1 if A1Cresult in A1Cresults else 0 for A1Cresult in A1Cresult_type]
+    A1Cresult_string = ''.join(A1Cresults)
+    A1Cresult_features = [1 if A1Cresult_string == A1Cresult else 0 for A1Cresult in A1Cresult_type]
 
     max_glu_serums = data.get('Max_glu_serum', [])
-    max_glu_serum_features = [1 if max_glu_serum in max_glu_serums else 0 for max_glu_serum in max_glu_serum_type]
+    max_glu_serum_string = ''.join(max_glu_serums)
+    max_glu_serum_features = [1 if max_glu_serum_string == max_glu_serum else 0 for max_glu_serum in max_glu_serum_type]
 
     age = int(data['age'])
     time_in_hospital = int(data['time_in_hospital'])
@@ -181,28 +205,47 @@ def predict():
     diabetesMed = int(data['diabetesMed'])
 
     features = np.array([age, time_in_hospital, num_lab_procedure, num_procedures, num_medications, num_diagnoses, change, diabetesMed] + admission_features + discharge_features + admission_source_features + metformin_features + insulin_features + diagnosis_features + gender_features + race_features + A1Cresult_features + max_glu_serum_features)
-
     features_tensor = torch.tensor(features, dtype=torch.float32)
 
     prediction = model.predict(features_tensor)
 
-    data['Admission'] = [admission_type_mapping.get(admission, admission) for admission in data.get('Admission', [])]
-    data['Discharge'] = [discharge_disposition_mapping.get(discharge, discharge) for discharge in data.get('Discharge', [])]
-    data['Admission source'] = [admission_source_mapping.get(admission_source, admission_source) for admission_source in data.get('Admission source', [])]
-    data['Metformin'] = [metformin_mapping.get(metformin, metformin) for metformin in data.get('Metformin', [])]
-    data['Insulin'] = [insulin_mapping.get(insulin, insulin) for insulin in data.get('Insulin', [])]
-    data['Diagnosis'] = [diagnosis_mapping.get(diagnosis, diagnosis) for diagnosis in data.get('Diagnosis', [])]
+    data['Admission'] = [admission_type_mapping.get(admission_string, admission_string)]
+    data['Discharge'] = [discharge_disposition_mapping.get(discharge_string, discharge_string)]
+    data['Admission source'] = [admission_source_mapping.get(admission_source_string, admission_source_string)]
+    data['Metformin'] = [metformin_mapping.get(metformin_string, metformin_string)]
+    data['Insulin'] = [insulin_mapping.get(insulin_string, insulin_string)]
+    data['Diagnosis'] = [diagnosis_mapping.get(diagnosis_string, diagnosis_string)]
+    data['Race'] = [race_mapping.get(race_string, race_string)]
+    data['Gender'] = [gender_mapping.get(gender_string, gender_string)]
+    data['A1Cresult'] =  [A1Cresult_mapping.get(A1Cresult_string, A1Cresult_string)]
+    data['Max_glu_serum'] =  [max_glu_serum_mapping.get(max_glu_serum_string, max_glu_serum_string)]
 
     conn = get_db_connection()
     cursor = conn.cursor()
+
+    admission_source = data['Admission source']
+    admission = data['Admission']
+    discharge = data['Discharge']
+    metformin = data['Metformin']
+    insulin = data['Insulin']
+    diagnosis = data['Diagnosis']
+    race = data['Race']
+    gender = data['Gender']
+    A1Cresult = data['A1Cresult']
+    max_glu_serum = data['Max_glu_serum']
+
     
     cursor.execute('''
-        INSERT INTO patients (name, age, time_in_hospital, num_lab_procedures, num_procedures, num_medications, num_diagnoses, 
-        change, diabetesMed, readmitted, admission, discharge, admission_source, metformin, insulin, diagnosis)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (patient_name, age, time_in_hospital, num_lab_procedure, num_procedures, num_medications, num_diagnoses,
-          change, diabetesMed, prediction.item(), ','.join(data['Admission']), ','.join(data['Discharge']),
-          ','.join(data['Admission source']), ','.join(data['Metformin']), ','.join(data['Insulin']), ','.join(data['Diagnosis'])))
+        INSERT INTO patients (name, home, mobile, email, age, time_in_hospital, num_lab_procedures, num_procedures, num_medications, num_diagnoses, 
+        change, diabetesMed, readmitted, admission, discharge, admission_source, metformin, insulin, diagnosis, race, gender, A1Cresult, max_glu_serum)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (name, home, mobile, email, age, time_in_hospital, num_lab_procedure, num_procedures, num_medications, num_diagnoses,
+      change, diabetesMed, prediction.item(), ','.join(admission),
+      ','.join(discharge),
+      ','.join(admission_source),
+      ','.join(metformin),
+      ','.join(insulin),
+      ','.join(diagnosis), ','.join(race), ','.join(gender), ','.join(A1Cresult), ','.join(max_glu_serum)))
 
     conn.commit()
     conn.close()
@@ -220,6 +263,6 @@ def predict():
 # def predict_rf():
 #     data = request.json
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     app.run(debug=True)
 

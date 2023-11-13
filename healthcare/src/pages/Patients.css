@@ -1,14 +1,17 @@
 .patients-container {
     display: flex;
+    flex-direction: column;
+    height: 100%;
     font-family: Arial, sans-serif;
   }
   
   .patient-list {
+    flex: 1;
     padding: 20px;
     overflow-y: auto;
     list-style:none;
-    flex: 1;
-    max-height: 100vh;
+    background-color: #f0f0f0;
+    align-items: flex-start;
   }
 
   .patient-list::-webkit-scrollbar {
@@ -25,6 +28,9 @@
     padding: 8px;
     transition: background-color 0.3s;
     color: #888;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .patient-details {
@@ -34,6 +40,21 @@
   .patient-item:hover {
     background-color: #e8e8e8;
     color: #333;
+  }
+
+  .risk-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  
+  .high-risk {
+    background-color: red; /* Color for high-risk patients */
+  }
+  
+  .low-risk {
+    background-color: green; /* Color for low-risk patients */
   }
 
   .patient-box {

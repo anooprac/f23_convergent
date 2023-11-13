@@ -17,5 +17,12 @@ CREATE TABLE patients (
     admission_source TEXT,
     metformin TEXT,
     insulin TEXT,
-    diagnosis TEXT
+    diagnosis TEXT,
+    home TEXT,
+    mobile TEXT,
+    email TEXT,
+    race TEXT,
+    gender TEXT,
+    A1Cresult TEXT,
+    max_glu_serum TEXT
 );
