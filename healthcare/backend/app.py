@@ -16,7 +16,7 @@ def get_db_connection():
 @app.route('/')
 def index():
     conn = get_db_connection()
-    patients = conn.execute('SELECT * FROM patients').fetchall()
+    patients = conn.execute('SELECT * FROM patients WHERE archived = 0').fetchall()
     conn.close()
     patient_list = []
 
@@ -43,6 +43,7 @@ def index():
             'gender': patient['gender'],
             'A1Cresult': patient['A1Cresult'],
             'max_glu_serum': patient['max_glu_serum'],
+            'archived': patient['archived'],
             'contact': {
                 'home': patient['home'],
                 'mobile': patient['mobile'],
@@ -259,9 +260,23 @@ def predict():
 
     return jsonify(response_data)
 
-# @app.route('/predict_RF', methods=['POST'])
-# def predict_rf():
-#     data = request.json
+@app.route('/archive/<int:patient_id>', methods=['POST'])
+def archive_patient(patient_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    print(patient_id)
+    cursor.execute('UPDATE patients SET archived = 1 WHERE id = ?', (patient_id,))
+    conn.commit()
+    conn.close()
+    return jsonify({'message': 'Patient archived successfully'})
+
+@app.route('/patients/total', methods=['GET'])
+def get_total_patients():
+    conn = get_db_connection()
+    total_patients = conn.execute('SELECT COUNT(*) FROM patients').fetchone()[0]
+    unarchived_patients = conn.execute('SELECT COUNT(*) FROM patients WHERE archived = 0').fetchone()[0]
+    conn.close()
+    return jsonify({"total_patients": total_patients, "unarchived_patients": unarchived_patients})
 
 # if __name__ == '__main__':
 #     app.run(debug=True)

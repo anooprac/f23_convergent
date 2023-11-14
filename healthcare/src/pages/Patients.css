@@ -50,11 +50,11 @@
   }
   
   .high-risk {
-    background-color: red; /* Color for high-risk patients */
+    background-color: red;
   }
   
   .low-risk {
-    background-color: green; /* Color for low-risk patients */
+    background-color: green;
   }
 
   .patient-box {
@@ -110,6 +110,28 @@
     border-radius: 5px;
     font-family: Arial, sans-serif;
     width: 87.5%;
+  }
+
+  .archive-button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px; 
+    width: 90%;
+  }
+  
+  .archive-button {
+    background-color: #808080; 
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+  }
+  
+  .archive-button:hover {
+    background-color: #a0a0a0; 
   }
   
   h2 {

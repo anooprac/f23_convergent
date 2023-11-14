@@ -124,7 +124,6 @@ function Schedule() {
     { value: 'max_glu_serum_>200', label: '>200' },
     { value: 'max_glu_serum_>300', label: '>300' },
   ];
-  
 
   return (
     <div className="patient-form">

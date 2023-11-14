@@ -20,6 +20,25 @@ const Patients = () => {
       });
   }, []);
 
+  const handleArchive = (patientId) => {
+    patientId = parseInt(patientId, 10);
+    console.log('patientId:', patientId);
+    fetch(`http://127.0.0.1:5000/archive/${patientId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      window.location.reload();
+    })
+    .catch((error) => {
+      console.error('Error archiving patient:', error);
+    });
+  }  
+
   const handlePatientSelect = (patient) => {
     setSelectedPatient(patient);
   };
@@ -79,34 +98,35 @@ const Patients = () => {
                 ))}
                 </ul>
         </div>
-        <div className = "patient-box">
-            {selectedPatient && (
-            <div>
-            <div className = "patient-box-header"> 
-              <p>Patient Name : {selectedPatient.name}</p>
-              <div className = "patient-risk-status"> 
-                {selectedPatient.readmitted > 0.5
-                  ? 'High Risk'
-                  : 'Low Risk'}
+        {selectedPatient && (
+        <div>
+            <div className="patient-box">
+              <div className = "patient-box-header"> 
+                <p>Patient Name : {selectedPatient.name}</p>
+                <div className = "patient-risk-status"> 
+                  {selectedPatient.readmitted > 0.5
+                    ? 'High Risk'
+                    : 'Low Risk'}
+                </div>
+              </div>
+              <div className='patient-details'>
+                <p>Name: {selectedPatient.name}</p>
+                <p>Age: {selectedPatient.age}</p>
+                <div className='patient-contact'>
+                  <p>Contact</p>
+                  <p>Phone Number (Home): </p>
+                  <p>{selectedPatient.contact.home}</p>
+                  <p>Phone Number (Mobile): </p>
+                  <p>{selectedPatient.contact.mobile}</p>
+                  <p>Email: </p>
+                  <p>{selectedPatient.contact.email}</p>
+                </div>
               </div>
             </div>
-            <div className='patient-details'>
-            <p>Name: {selectedPatient.name}</p>
-            <p>Age: {selectedPatient.age}</p>
-            <div className='patient-contact'>
-              <p>Contact</p>
-              <p>Phone Number (Home): </p>
-              <p>{selectedPatient.contact.home}</p>
-              <p>Phone Number (Mobile): </p>
-              <p>{selectedPatient.contact.mobile}</p>
-              <p>Email: </p>
-              <p>{selectedPatient.contact.email}</p>
+            <div className="archive-button-container">
+              <button className="archive-button" onClick={() => handleArchive(selectedPatient.id)}>Archive</button>
             </div>
-            </div>
-            </div>
-            )}
-        </div>
-      
+        </div>)}
     </PatientsLayout>
   );
 };
