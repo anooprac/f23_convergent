@@ -23,9 +23,9 @@ const Navbar = () => {
             PATIENTS
           </Link>
         </li>
-        <li className="nav-item">
+        <li className="nav-item" style={{marginLeft: '35px', width: '200px'}}>
           <Link to="/schedule" className={`nav-link ${isCurrentPage('/schedule') ? 'active' : ''}`}>
-            SCHEDULE
+            NEW PATIENT
           </Link>
         </li>
       </ul>

@@ -127,7 +127,6 @@ function Schedule() {
 
   return (
     <div className="patient-form">
-      <h1>Schedule</h1>
       <form onSubmit={handleSubmit}>
         <label className="patient-form-label">
           Name:
