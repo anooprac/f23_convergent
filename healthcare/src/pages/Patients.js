@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import PatientsLayout from '../components/PatientsLayout';
+import PatientsLayout1 from '../components/PatientsLayout1';
 import './Patients.css';
 import arrowImage from './arrow.png'
+import PatientsSummaryCard from '../components/PatientsSummaryCard';
+import Recommendations from '../components/Recommendation';
 
 const Patients = () => {
   const [patients, setPatients] = useState([]);
@@ -71,8 +74,8 @@ const Patients = () => {
 
   if (!selectedPatient) {
     return (
-      <div className="patients-container">
-        <div className='top-bar'>
+      <div>
+      <div className='top-bar'>
           <input
               type="text"
               placeholder="Search patients..."
@@ -81,6 +84,9 @@ const Patients = () => {
               className="search-bar"
             />
         </div>
+      <PatientsLayout1>
+        <div className="patients-container">
+          
           <ul className="patient-list">
             {filteredPatients.map((patient) => (
               <li
@@ -91,7 +97,7 @@ const Patients = () => {
               <span
                 className={`risk-indicator ${patient.readmitted >= 0.5 ? 'high-risk' : 'low-risk'}`}
               ></span>
-              <div className='patient_text' style={{fontSize: '18px', fontWeight: '400'}}>{patient.name}</div>
+              <div className='patient_text' style={{fontSize: '18px', width: '300px', fontWeight: '400'}}>{patient.name}</div>
               <div className='patient_text'>{patient.age}</div>
               <div className='patient_text'>{patient.gender}</div>
               <div className='patient_text'>{patient.diagnosis}</div>
@@ -100,6 +106,9 @@ const Patients = () => {
             ))}
           </ul>
         </div>
+        <PatientsSummaryCard></PatientsSummaryCard>
+      </PatientsLayout1>
+      </div>
     );
   } else {
     return (
@@ -137,19 +146,17 @@ const Patients = () => {
           </div>
           <div className="patient-box">
             <div className = "patient-box-header"> 
-              <p style={{width: '200px'}}>Patient Name : {selectedPatient.name}</p>
+              <p style={{width: '250px'}}>Patient Name : {selectedPatient.name}</p>
               <div className = "patient-risk-status"> 
-                {selectedPatient.readmitted > 0.5
-                  ? 'High Risk'
-                  : 'Low Risk'}
+                {(selectedPatient.readmitted * 100).toFixed(2)}%
               </div>
               <p style={{fontSize: '17px', marginRight: '40px', marginLeft:'0px'}}>Diagnosis</p>
               <p style={{fontSize: '17px', marginRight: '80px', marginLeft:'40px', marginRight: '10px'}}>Contact</p>
             </div>
             <div className='patient-details' style={{marginTop: '-20px'}}>
               <p style={{padding: '20px', marginLeft: '0px', width: '250px'}}>Gender: {selectedPatient.gender}</p>
-              <p style={{padding: '20px', width: '250px', marginRight: '60px'}}>Age: {selectedPatient.age}</p>
-              <p style={{width: '200px', marginLeft: '-68px', fontSize: '12px', color: '#6a8f86', marginTop: '-5px'}}>{selectedPatient.diagnosis}</p>
+              <p style={{padding: '20px', width: '250px', marginLeft: '30px'}}>Age: {selectedPatient.age}</p>
+              <p style={{width: '200px', marginLeft: '-10px', fontSize: '12px', color: '#6a8f86', marginTop: '-5px'}}>{selectedPatient.diagnosis}</p>
               <div className='patient-contact' style={{justifyContent: 'right', textAlign: 'right', width: '200px', paddingRight: '30px', marginTop: '-15px'}}>
                 <p style={{fontSize: '12px', color: '#6a8f86'}}>Phone Number (Home): </p>
                 <p style={{fontSize: '12px', color: '#6a8f86'}}>{selectedPatient.contact.home}</p>
@@ -162,12 +169,7 @@ const Patients = () => {
           </div>
           <div class="horizontal-line"></div>
           <div className="bottom-half">
-            <div className="appointments">
-              <p style={{margin: '10px 10px'}}>Upcoming Appointments</p>
-              <div class="horizontal-line" style={{width: '100%', marginTop: '-60px'}}></div>
-              <div class="horizontal-line" style={{}}></div>
-              <div></div>
-            </div>
+            <Recommendations selectedPatient={selectedPatient}></Recommendations>
             <div className='links-container'>
                 <div className="link" style={{marginBottom: '10px'}} onClick={()=> handleMedicalHistoryClick(true)}>
                   <p>Medical History</p>

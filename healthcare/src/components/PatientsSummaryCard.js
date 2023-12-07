@@ -51,7 +51,7 @@ return (
             cx="180"
             cy="150"
             style={{
-              strokeDasharray: `${percentage / 100 * 566}, 360`,
+              strokeDasharray: `${percentage / 100 * 566} 720`,
               transform: 'rotate(-90deg)'
             }}
           />
@@ -60,7 +60,7 @@ return (
           {percentage.toFixed(0)}%
         </p>
       </div>
-      <div className="patients-list">
+      {/* <div className="patients-list">
         {topPatients.map((patient, index) => (
           <div key={index} className="patient">
             <span
@@ -70,7 +70,7 @@ return (
             <button className="contact-button">Contact Now</button>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 

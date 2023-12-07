@@ -125,14 +125,14 @@
   justify-items: center;
   align-items: center;
   border-radius: 20px;
-  margin-left: 40px;
   color: #0b544b;
   font-family: "Jost-Bold", Helvetica;
   font-size: 17px;
   font-weight: 700;
   height: 20px;
-  width: 80px;
+  width: 65px;
   margin-left: -100px;
+  text-align: center;
 }
 
 .patient-details {
@@ -214,18 +214,6 @@
     margin: 30px 75px;
   }
 
-
-  .appointments {
-    background-color: #acd1c4;
-    width: 481px;
-    height: 152px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    border-radius: 20px;
-    box-shadow: 0px 4px 4px #00000040;
-  }
-
   .links-container {
     display: flex;
     flex-direction: column;
@@ -246,6 +234,10 @@
     border-radius: 20px;
     height: 60px;
     cursor: pointer;
+  }
+
+  .link:hover {
+    background-color: #e7eded;
   }
 
   .link p {

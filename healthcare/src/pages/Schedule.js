@@ -3,26 +3,26 @@ import './Schedule.css';
 
 function Schedule() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    mobile: '',
-    home: '',
-    age: '5',
-    time_in_hospital: '0',
-    num_lab_procedures: '0',
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    mobile: '(555) 123-4567',
+    home: '(555) 987-6543',
+    age: '65',
+    time_in_hospital: '1',
+    num_lab_procedures: '49',
     num_procedures: '0',
-    num_medications: '0',
-    num_diagnoses: '0',
+    num_medications: '5',
+    num_diagnoses: '4',
     change: '0',
     diabetesMed: '0',
-    Admission: 'admission_type_id_Emergency',
+    Admission: 'admission_type_id_Other',
     Discharge: 'discharge_disposition_id_Home',
     'Admission source': 'admission_source_id_Emergency Room',
-    Metformin: 'metformin_Steady',
-    Insulin: 'insulin_Steady',
-    Diagnosis: 'diag_1_Other',
+    Metformin: 'metformin_No',
+    Insulin: 'insulin_No',
+    Diagnosis: 'diag_1_Symptoms',
     A1Cresult: 'A1Cresult_Norm',
-    Max_glu_serum: 'max_glu_serum_Norm',
+    Max_glu_serum: 'max_glu_serum_>200',
     Gender: 'gender_Male',
     Race: 'race_Other'
   });
@@ -48,6 +48,7 @@ function Schedule() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+        alert('Patient submitted successfully!');
       })
       .catch((error) => {
         console.error('Error submitting form:', error);
@@ -130,7 +131,7 @@ function Schedule() {
       <form onSubmit={handleSubmit}>
         <label className="patient-form-label">
           Name:
-          <input type="text" name="name" value={formData.name} onChange={handleChange} required className="patient-form-input" />
+          <input type="text" name="name" value={formData.name} onChange={handleChange} required className="patient-form-input" defaultValue={"John Doe"} />
         </label>
         <label className="patient-form-label">
           Email:
@@ -138,11 +139,11 @@ function Schedule() {
         </label>
         <label className="patient-form-label">
           Home Phone:
-          <input type="text" name="home" value={formData.home} onChange={handleChange} required className="patient-form-input" />
+          <input type="text" name="home" value={formData.home} onChange={handleChange} required className="patient-form-input"/>
         </label>
         <label className="patient-form-label">
           Mobile Phone:
-          <input type="text" name="mobile" value={formData.mobile} onChange={handleChange} required className="patient-form-input" />
+          <input type="text" name="mobile" value={formData.mobile} onChange={handleChange} required className="patient-form-input"/>
         </label>
         <label className="patient-form-label">
           Age:
@@ -157,24 +158,6 @@ function Schedule() {
             onChange={handleChange}
           >
             {genderOptions.map((option) => (
-              <option
-                key={option.value}
-                value={option.value}
-              >
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="patient-form-label">
-          Race:
-          <select
-            className="patient-form-select"
-            name="race"
-            value={formData.race}
-            onChange={handleChange}
-          >
-            {raceOptions.map((option) => (
               <option
                 key={option.value}
                 value={option.value}

@@ -14,13 +14,8 @@ const Navbar = () => {
     <nav className="navbar">
       <ul className="nav-links">
         <li className="nav-item">
-          <Link to="/" className={`nav-link ${isCurrentPage('/') ? 'active' : ''}`}>
-            HOME
-          </Link>
-        </li>
-        <li className="nav-item">
           <Link to="/patients" className={`nav-link ${isCurrentPage('/patients') ? 'active' : ''}`}>
-            PATIENTS
+            HOME
           </Link>
         </li>
         <li className="nav-item" style={{marginLeft: '35px', width: '200px'}}>

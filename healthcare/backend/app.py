@@ -39,7 +39,6 @@ def index():
             'metformin': patient['metformin'],
             'insulin': patient['insulin'],
             'diagnosis': patient['diagnosis'],
-            'race': patient['race'],
             'gender': patient['gender'],
             'A1Cresult': patient['A1Cresult'],
             'max_glu_serum': patient['max_glu_serum'],
@@ -57,7 +56,7 @@ def index():
 class SimpleNet(nn.Module):
     def __init__(self):
         super().__init__()
-        self.layers = nn.Sequential(nn.Linear(49,16), nn.Sigmoid(), nn.Linear(16,32), nn.Sigmoid(), nn.Linear(32, 64), nn.Sigmoid(), nn.Linear(64, 1), nn.Sigmoid())
+        self.layers = nn.Sequential(nn.Linear(42,16), nn.Sigmoid(), nn.Linear(16,32), nn.Sigmoid(), nn.Linear(32, 64), nn.Sigmoid(), nn.Linear(64, 1), nn.Sigmoid())
 
     def forward(self, x):
         yhat = self.layers(x)
@@ -74,21 +73,20 @@ model = SimpleNet()
 model.load_state_dict(torch.load('../../my_model.pth'))
 model.eval()
 
-admission_type = ['admission_type_id_Elective', 'admission_type_id_Emergency', 'admission_type_id_Newborn', 'admission_type_id_Other']
+admission_type = ['admission_type_id_Elective', 'admission_type_id_Emergency', 'admission_type_id_Other']
 discharge_type = ['discharge_disposition_id_Home', 'discharge_disposition_id_Other']
-admission_source_type = ['admission_source_id_Emergency Room', 'admission_source_id_Other', 'admission_source_id_Physician Referral']
+admission_source_type = ['admission_source_id_Emergency Room', 'admission_source_id_Physician Referral']
 metformin_type = ['metformin_Down', 'metformin_No', 'metformin_Steady', 'metformin_Up']
 insulin_type = ['insulin_Down', 'insulin_No', 'insulin_Steady', 'insulin_Up']
 diagnosis_type = ['diag_1_Circulatory', 'diag_1_Digestive', 'diag_1_Endocrine', 'diag_1_Genitourinary', 'diag_1_Infectious', 'diag_1_Muscoskeletal', 'diag_1_Neoplasms', 'diag_1_Nervous', 'diag_1_Other', 'diag_1_Respiratory', 'diag_1_Symptoms']
 all_genders = ['gender_Female', 'gender_Male']
-all_races = ['race_AfricanAmerican', 'race_Asian', 'race_Caucasian', 'race_Hispanic', 'race_Other']
 A1Cresult_type = ['A1Cresult_>8', 'A1Cresult_>7', 'Norm']
 max_glu_serum_type = ['max_glu_serum_>200', 'max_glu_serum_>300', 'Norm']
 
 admission_type_mapping = {
     'admission_type_id_Elective': 'Elective',
     'admission_type_id_Emergency': 'Emergency',
-    'admission_type_id_Newborn': 'Newborn',
+    # 'admission_type_id_Newborn': 'Newborn',
     'admission_type_id_Other': 'Other'
 }
 discharge_disposition_mapping = {
@@ -97,7 +95,7 @@ discharge_disposition_mapping = {
 }
 admission_source_mapping = {
     'admission_source_id_Emergency Room': 'Emergency Room',
-    'admission_source_id_Other': 'Other',
+    # 'admission_source_id_Other': 'Other',
     'admission_source_id_Physician Referral': 'Physician Referral'
 }
 metformin_mapping = {
@@ -128,13 +126,6 @@ diagnosis_mapping = {
 gender_mapping = {
     'gender_Female': 'Female',
     'gender_Male': 'Male'
-}
-race_mapping = {
-    'race_AfricanAmerican': 'AfricanAmerican',
-    'race_Asian': 'Asian',
-    'race_Caucasian': 'Caucasian',
-    'race_Hispanic': 'Hispanic',
-    'race_Other': 'Other'
 }
 A1Cresult_mapping = {
     'A1Cresult_>8': '>8',
@@ -184,10 +175,6 @@ def predict():
     gender_string = ''.join(genders)
     gender_features = [1 if gender_string == gender else 0 for gender in all_genders]
 
-    races = data.get('Race', [])
-    race_string = ''.join(races)
-    race_features = [1 if race_string == race else 0 for race in all_races]
-
     A1Cresults = data.get('A1Cresult', [])
     A1Cresult_string = ''.join(A1Cresults)
     A1Cresult_features = [1 if A1Cresult_string == A1Cresult else 0 for A1Cresult in A1Cresult_type]
@@ -205,9 +192,8 @@ def predict():
     change = int(data['change'])
     diabetesMed = int(data['diabetesMed'])
 
-    features = np.array([age, time_in_hospital, num_lab_procedure, num_procedures, num_medications, num_diagnoses, change, diabetesMed] + admission_features + discharge_features + admission_source_features + metformin_features + insulin_features + diagnosis_features + gender_features + race_features + A1Cresult_features + max_glu_serum_features)
+    features = np.array([age, time_in_hospital, num_lab_procedure, num_procedures, num_medications, num_diagnoses, change, diabetesMed] + admission_features + discharge_features + admission_source_features + metformin_features + insulin_features + diagnosis_features + gender_features + A1Cresult_features + max_glu_serum_features)
     features_tensor = torch.tensor(features, dtype=torch.float32)
-
     prediction = model.predict(features_tensor)
 
     data['Admission'] = [admission_type_mapping.get(admission_string, admission_string)]
@@ -216,7 +202,6 @@ def predict():
     data['Metformin'] = [metformin_mapping.get(metformin_string, metformin_string)]
     data['Insulin'] = [insulin_mapping.get(insulin_string, insulin_string)]
     data['Diagnosis'] = [diagnosis_mapping.get(diagnosis_string, diagnosis_string)]
-    data['Race'] = [race_mapping.get(race_string, race_string)]
     data['Gender'] = [gender_mapping.get(gender_string, gender_string)]
     data['A1Cresult'] =  [A1Cresult_mapping.get(A1Cresult_string, A1Cresult_string)]
     data['Max_glu_serum'] =  [max_glu_serum_mapping.get(max_glu_serum_string, max_glu_serum_string)]
@@ -230,7 +215,6 @@ def predict():
     metformin = data['Metformin']
     insulin = data['Insulin']
     diagnosis = data['Diagnosis']
-    race = data['Race']
     gender = data['Gender']
     A1Cresult = data['A1Cresult']
     max_glu_serum = data['Max_glu_serum']
@@ -238,15 +222,15 @@ def predict():
     
     cursor.execute('''
         INSERT INTO patients (name, home, mobile, email, age, time_in_hospital, num_lab_procedures, num_procedures, num_medications, num_diagnoses, 
-        change, diabetesMed, readmitted, admission, discharge, admission_source, metformin, insulin, diagnosis, race, gender, A1Cresult, max_glu_serum)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        change, diabetesMed, readmitted, admission, discharge, admission_source, metformin, insulin, diagnosis, gender, A1Cresult, max_glu_serum)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (name, home, mobile, email, age, time_in_hospital, num_lab_procedure, num_procedures, num_medications, num_diagnoses,
       change, diabetesMed, prediction.item(), ','.join(admission),
       ','.join(discharge),
       ','.join(admission_source),
       ','.join(metformin),
       ','.join(insulin),
-      ','.join(diagnosis), ','.join(race), ','.join(gender), ','.join(A1Cresult), ','.join(max_glu_serum)))
+      ','.join(diagnosis), ','.join(gender), ','.join(A1Cresult), ','.join(max_glu_serum)))
 
     conn.commit()
     conn.close()

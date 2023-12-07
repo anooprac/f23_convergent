@@ -24,5 +24,6 @@ CREATE TABLE patients (
     race TEXT,
     gender TEXT,
     A1Cresult TEXT,
-    max_glu_serum TEXT
+    max_glu_serum TEXT, 
+    archived BOOLEAN NOT NULL DEFAULT 0
 );
